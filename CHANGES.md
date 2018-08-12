@@ -7,8 +7,12 @@
 * Added `HttpServer::maxconn()` and `HttpServer::maxconnrate()`,
   accept backpressure #250
 
-* Allow to customize connection handshake process via `HttpServer::listen_with()` 
+* Allow to customize connection handshake process via `HttpServer::listen_with()`
   and `HttpServer::bind_with()` methods
+
+### Changed
+
+* native-tls - 0.2
 
 ### Fixed
 
@@ -18,6 +22,23 @@
 * Fixed headers formating for CORS Middleware Access-Control-Expose-Headers #436
 
 * Fix adding multiple response headers #446
+
+* Client includes port in HOST header when it is not default(e.g. not 80 and 443). #448
+
+* Panic during access without routing being set #452
+
+* Fixed http/2 error handling
+
+### Deprecated
+
+* `HttpServer::no_http2()` is deprecated, use `OpensslAcceptor::with_flags()` or
+  `RustlsAcceptor::with_flags()` instead
+
+* `HttpServer::listen_tls()`, `HttpServer::listen_ssl()`, `HttpServer::listen_rustls()` have been
+  deprecated in favor of `HttpServer::listen_with()` with specific `acceptor`.
+
+* `HttpServer::bind_tls()`, `HttpServer::bind_ssl()`, `HttpServer::bind_rustls()` have been
+  deprecated in favor of `HttpServer::bind_with()` with specific `acceptor`.
 
 
 ## [0.7.3] - 2018-08-01

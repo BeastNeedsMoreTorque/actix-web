@@ -21,20 +21,25 @@ pub(crate) mod helpers;
 pub(crate) mod input;
 pub(crate) mod message;
 pub(crate) mod output;
+mod server;
 pub(crate) mod settings;
-mod srv;
+mod http;
 mod ssl;
 mod worker;
 
+use actix::Message;
+
 pub use self::message::Request;
+pub use self::server::{
+    ConnectionRateTag, ConnectionTag, Connections, Server, Service, ServiceHandler,
+};
 pub use self::settings::ServerSettings;
-pub use self::srv::HttpServer;
+pub use self::http::HttpServer;
 pub use self::ssl::*;
 
 #[doc(hidden)]
 pub use self::helpers::write_content_length;
 
-use actix::Message;
 use body::Binary;
 use error::Error;
 use extensions::Extensions;
@@ -134,6 +139,16 @@ pub struct StopServer {
 
 impl Message for StopServer {
     type Result = Result<(), ()>;
+}
+
+/// Socket id token
+#[derive(Clone, Copy)]
+pub struct Token(usize);
+
+impl Token {
+    pub(crate) fn new(val: usize) -> Token {
+        Token(val)
+    }
 }
 
 /// Low level http request handler
